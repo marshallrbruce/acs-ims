@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>ACS Inventory Web Application</title>
+    </head>
+    <body>
+        <h1>Update and Monitor Inventories</h1>
+        <button class='btn' type="button" onclick="window.location.href='{{ url_for('additem') }}'">Add a NEW inventory item</button><br/> 
+        <button class="btn" type="button" onclick="window.location.href='{{ url_for('viewinventory') }}'">View existing inventories</button></br>
+        <button class="btn" type="button" onclick="window.location.href='{{ url_for('deleteitem') }}'">Delete an item from the inventory</button></br>
+    </body>
+</html>

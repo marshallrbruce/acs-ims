@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>ACS Inventory Web Application</title>
+    </head>
+    <style>
+        table, th, td{
+            border: 1px solid black;
+        }
+    </style>
+    <body>
+        <table style="width: 100%">
+            <tr>
+                <th>Name</th>
+                <th>Division</th>
+                <th>Mininum Quantity</th>
+                <th>Maximum Quantity</th>
+                <th>Contract (Y/N)</th>
+                <th>Recurring Purchase (Y/N)</th>
+            </tr>
+            {%for invItem in data%}
+            <tr>
+                <td>{{invItem[0]}}</td>
+                <td>{{invItem[1]}}</td>
+                <td>{{invItem[2]}}</td>
+                <td>{{invItem[3]}}</td>
+                <td>{{invItem[4]}}</td>
+                <td>{{invItem[5]}}</td>
+            </tr>
+            {%endfor%}
+        </table>
+    </body>
+</html>

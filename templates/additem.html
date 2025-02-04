@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>ACS Inventory Web Application</title>
+    </head>
+    <body>
+        <form method="POST">
+            <label>Enter Item Name:</label>
+            <input type="name" name="name" placeholder="Enter item name" required><br/>
+            <label>Enter Division:</label>
+            <input type="name" name="division" placeholder="Enter the division the item belongs to" required><br/>
+            <label>Enter Mininum Quantity:</label>
+            <input type="number" name="minQty" placeholder="Enter minimum stock level for this item"><br/>
+            <label>Enter Maximum Quantity:</label>
+            <input type="number" name="maxQty" placeholder="Enter maximum stock level for this item"><br/>
+            <label>Contract (Y/N):</label>
+            <input type="text" name="contract" placeholder="Is this item on contract? (Y/N)" required><br/>
+            <label>Recurring Purchase (Y/N):</label>
+            <input type="text" name="recurring" placeholder="Is this item a recurring purchase? (Y/N)" required><br/>
+            <input type="submit" value="submit"/><br/>
+        </form>
+
+    </body>
+</html>

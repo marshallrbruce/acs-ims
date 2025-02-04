@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>ACS Inventory Web Application</title>
+    </head>
+    <style>
+        table, th, td{
+            border: 1px solid black;
+        }
+    </style>
+    <!--TODO: Modify this page to show the viewinventory.html with limited column info, but with a DELETE button at the end of each row
+    where the DELETE button will have python code to select that row and delete it (hopefully)-->
+    <body>
+        <table style="width: 100%">
+            <tr>
+                <th></th>
+                <th>Row ID</th>
+                <th>Name</th>
+                <th>Division</th>
+            </tr>
+            {%for invItem in data%}
+            <tr>
+                <td><button class="btn" type="button" onclick="window.location.href='deleteitem()'">Delete</button></td>
+                <td>{{invItem[0]}}</td>
+                <td>{{invItem[1]}}</td>
+                <td>{{invItem[2]}}</td>
+            </tr>
+            {%endfor%}
+        </table>
+    </body>
+</html>
