@@ -11,7 +11,7 @@ def index():
 connect = sqlite3.connect('ims.db')
 connect.execute(
     'CREATE TABLE IF NOT EXISTS ACSINV (name TEXT, \
-        division TEXT, minQty NUMBER, maxQty NUMBER, contract TEXT, \
+        division TEXT, stock_lvl NUMBER, minQty NUMBER, maxQty NUMBER, contract TEXT, \
         recurring TEXT)')
 
 @app.route('/additem', methods=['GET', 'POST'])
@@ -19,6 +19,7 @@ def additem():
     if request.method == 'POST':
         name = request.form['name']
         division = request.form['division']
+        stock_lvl = request.form['stock_lvl']
         minQty = request.form['minQty']
         maxQty = request.form['maxQty']
         contract = request.form['contract']
@@ -27,8 +28,8 @@ def additem():
         with sqlite3.connect('ims.db') as users:
             cursor = users.cursor()
             cursor.execute('INSERT INTO ACSINV \
-                           (name, division, minQty, maxQty, contract, recurring) VALUES (?,?,?,?,?,?)',
-                           (name, division, minQty, maxQty, contract, recurring))
+                           (name, division, stock_lvl, minQty, maxQty, contract, recurring) VALUES (?,?,?,?,?,?,?)',
+                           (name, division, stock_lvl, minQty, maxQty, contract, recurring))
             users.commit()
         return render_template('index.html')
     else:
