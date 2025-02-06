@@ -44,17 +44,49 @@ def viewinventory():
     data = cursor.fetchall()
     return render_template('viewinventory.html', data = data)
 
-# TODO: make @app.route and function to delete items
-@app.route('/deleteitem', methods=['GET', 'DELETE'])
-def deleteitem():
-    if request.method == 'DELETE':
+@app.route('/updatestock', methods=['GET', 'POST'])
+def updatestock():
+    if request.method == 'POST':
+        name = request.form['name']
+        stock_lvl = request.form['updatestock']
         with sqlite3.connect('ims.db') as users:
             cursor = users.cursor()
-            cursor.execute('DELETE FROM ACSINV WHERE rowid = ?, (rowid)')
+            cursor.execute("UPDATE acsinv SET stock_lvl = ? WHERE name = ?", (stock_lvl, name,))
+
             users.commit()
-        return render_template('index.html')
+            cursor.execute('SELECT * FROM ACSINV ORDER BY DIVISION ASC')
+
+            data = cursor.fetchall()    
+            
+        return render_template('updatestock.html', data=data)
     else:
-        return render_template('viewinventory.html')
+        with sqlite3.connect('ims.db') as users:
+            cursor = users.cursor()
+            cursor.execute('SELECT name, division, stock_lvl FROM ACSINV ORDER BY DIVISION ASC')
+
+            data = cursor.fetchall() 
+        return render_template('updatestock.html', data=data)
+
+# TODO: make @app.route and function to delete items
+@app.route('/deleteitem', methods=['GET', 'POST'])
+def deleteitem():
+    if request.method == 'POST':
+        name = request.form['name']
+        with sqlite3.connect('ims.db') as users:
+            cursor = users.cursor()
+            cursor.execute('DELETE FROM ACSINV WHERE name = ?', (name,))
+            users.commit()
+            cursor.execute('SELECT * FROM ACSINV ORDER BY DIVISION ASC')
+
+            data = cursor.fetchall() 
+        return render_template('deleteitem.html', data = data)
+    else:
+        with sqlite3.connect('ims.db') as users:
+            cursor = users.cursor()
+            cursor.execute('SELECT name, division, stock_lvl FROM ACSINV ORDER BY DIVISION ASC')
+
+            data = cursor.fetchall() 
+        return render_template('deleteitem.html', data = data)
 
 # TODO: make @app.route, function, and HTML page to update inventory filtered by division
 
