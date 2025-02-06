@@ -8,24 +8,27 @@
             border: 1px solid black;
         }
     </style>
-    <!--TODO: Modify this page to show the viewinventory.html with limited column info, but with a DELETE button at the end of each row
-    where the DELETE button will have python code to select that row and delete it (hopefully)-->
     <body>
         <table style="width: 100%">
             <tr>
                 <th>Name</th>
                 <th>Division</th>
+                <th>Current Stock</th>
             </tr>
             {%for invItem in data%}
             <tr>
                 <td>{{invItem[0]}}</td>
                 <td>{{invItem[1]}}</td>
+                <td>{{invItem[2]}}</td>
             </tr>
             {%endfor%}
         </table>
+        
         <form method="POST">
             <label>Enter item name:</label>
             <input type="name" name="name" placeholder="Enter item name"><br/>
+            <label>Enter current stock quantity:</label>
+            <input type="number" name="updatestock" placeholder="Update stock quantity"><br/>
             <input type="submit" value="submit"/><br/>
             </form>
     </body>
