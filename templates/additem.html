@@ -1,9 +1,49 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <link rel="stylesheet" href="../static/styles/styles.css">
+        <title>ACS Inventory Web Application</title>
+    </head>
         <title>ACS Inventory Web Application</title>
     </head>
     <body>
+        <ul>
+            <li class="dropdown"><a class="dropbtn">Inventory</a>
+            <div class="dropdown-content">
+                <a href="home">Home</a>
+                <a href="viewinventory">View Inventory</a>
+                <a href="updatestock">Update Stock</a>
+                <a href="additem">Add Item</a>
+                <a href="deleteitem">Delete Item</a>
+            </div>
+            </li>
+            <li class="dropdown"><a class="dropbtn">Orders</a>
+                <div class="dropdown-content">
+                    <a href="needtoorder">Need to Order</a>
+                    <a href="pendingorders">Pending Orders</a>
+                    <a href="receiveorders">Receive Orders</a>
+                    <a href="completedorders">Completed Orders</a>
+                </div>
+                </li>
+                <li class="dropdown"><a class="dropbtn">Fiscal</a>
+                    <div class="dropdown-content">
+                        <a href="ytdspending">YTD Spending</a>
+                        <a href="eoyinventories">EOY Inventories</a>
+                        <a href="spendingbycc">Spending by CC</a>
+                        <a href="spendingbygl">Spending by GL</a>
+                        <a href="spendingbyitem">Spending by Item</a>
+                    </div>
+                </li>
+                <li class="dropdown"><a class="dropbtn">ITSD</a>
+                    <div class="dropdown-content">
+                        <a href="itsd-pc">PC Inventory</a>
+                        <a href="itsd-mobile">Mobile Inventory</a>
+                        <a href="itsd-printers">Printer Inventory</a>
+                        <a href="pcr">Annual PCR</a>
+                    </div>
+                </li>
+        </ul>
+        <h1>Add an Item</h1>
         <form method="POST">
             <label>Enter Item Name:</label>
             <input type="name" name="name" placeholder="Enter item name" required><br/>
@@ -21,6 +61,5 @@
             <input type="text" name="recurring" placeholder="Is this item a recurring purchase? (Y/N)" required><br/>
             <input type="submit" value="submit"/><br/>
         </form>
-
     </body>
 </html>

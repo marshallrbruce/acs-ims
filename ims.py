@@ -67,7 +67,6 @@ def updatestock():
             data = cursor.fetchall() 
         return render_template('updatestock.html', data=data)
 
-# TODO: make @app.route and function to delete items
 @app.route('/deleteitem', methods=['GET', 'POST'])
 def deleteitem():
     if request.method == 'POST':
