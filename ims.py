@@ -1,5 +1,5 @@
-from flask import Flask, render_template, request
-import sqlite3
+from flask import Flask, render_template, request, redirect, url_for
+import psycopg2
 
 app = Flask(__name__)
 
@@ -8,10 +8,13 @@ app = Flask(__name__)
 def index():
     return render_template('index.html')
 
-connect = sqlite3.connect('ims.db')
-connect.execute(
-    'CREATE TABLE IF NOT EXISTS ACSINV (name TEXT, \
-        division TEXT, stock_lvl NUMBER, minQty NUMBER, maxQty NUMBER, contract TEXT, \
+connect = psycopg2.connect(database='ims', user='postgres',
+                           password="LuLu!$4d0gg0!", host="localhost", port="5432")
+
+cur = connect.cursor()
+cur.execute(
+    'CREATE TABLE IF NOT EXISTS ACSINV (name NAME, \
+        division NAME, stock_lvl INTEGER, minQty INTEGER, maxQty INTEGER, contract TEXT, \
         recurring TEXT)')
 
 @app.route('/additem', methods=['GET', 'POST'])
@@ -25,33 +28,39 @@ def additem():
         contract = request.form['contract']
         recurring = request.form['recurring']
 
-        with sqlite3.connect('ims.db') as users:
+        with psycopg2.connect(database='ims', user='postgres',
+                           password="LuLu!$4d0gg0!", host="localhost", port="5432") as users:
             cursor = users.cursor()
+            cursor.execute('CREATE TABLE IF NOT EXISTS ACSINV (name NAME, \
+                            division NAME, stock_lvl INTEGER, minQty INTEGER, maxQty INTEGER, contract TEXT, \
+                            recurring TEXT)')
             cursor.execute('INSERT INTO ACSINV \
-                           (name, division, stock_lvl, minQty, maxQty, contract, recurring) VALUES (?,?,?,?,?,?,?)',
+                           (name, division, stock_lvl, minQty, maxQty, contract, recurring) VALUES \
+                           (%s, %s, %s, %s, %s, %s, %s)',
                            (name, division, stock_lvl, minQty, maxQty, contract, recurring))
             users.commit()
         return render_template('index.html')
     else:
         return render_template('additem.html')
     
-@app.route('/viewinventory')
+@app.route('/viewinventory', methods=['GET'])
 def viewinventory():
-    connect = sqlite3.connect('ims.db')
-    cursor = connect.cursor()
-    cursor.execute('SELECT * FROM ACSINV ORDER BY DIVISION ASC')
-
-    data = cursor.fetchall()
-    return render_template('viewinventory.html', data = data)
+    if request.method == 'GET':
+        with psycopg2.connect(database='ims', user='postgres',
+                            password="LuLu!$4d0gg0!", host="localhost", port="5432") as users:
+            cursor = users.cursor()
+            cursor.execute('SELECT * FROM ACSINV ORDER BY DIVISION ASC')
+            data = cursor.fetchall()
+        return render_template('viewinventory.html', data = data)
 
 @app.route('/updatestock', methods=['GET', 'POST'])
 def updatestock():
     if request.method == 'POST':
         name = request.form['name']
         stock_lvl = request.form['updatestock']
-        with sqlite3.connect('ims.db') as users:
+        with psycopg2.connect(database='ims', user='postgres', password="LuLu!$4d0gg0!", host="localhost", port="5432") as users:
             cursor = users.cursor()
-            cursor.execute("UPDATE acsinv SET stock_lvl = ? WHERE name = ?", (stock_lvl, name,))
+            cursor.execute("UPDATE acsinv SET stock_lvl = %s WHERE name = %s", (stock_lvl, name,))
 
             users.commit()
             cursor.execute('SELECT * FROM ACSINV ORDER BY DIVISION ASC')
@@ -60,7 +69,7 @@ def updatestock():
             
         return render_template('updatestock.html', data=data)
     else:
-        with sqlite3.connect('ims.db') as users:
+        with psycopg2.connect(database='ims', user='postgres', password="LuLu!$4d0gg0!", host="localhost", port="5432") as users:
             cursor = users.cursor()
             cursor.execute('SELECT name, division, stock_lvl FROM ACSINV ORDER BY DIVISION ASC')
 
@@ -71,16 +80,17 @@ def updatestock():
 def deleteitem():
     if request.method == 'POST':
         name = request.form['name']
-        with sqlite3.connect('ims.db') as users:
+        with psycopg2.connect(database='ims', user='postgres', password="LuLu!$4d0gg0!", host="localhost", port="5432") as users:
             cursor = users.cursor()
-            cursor.execute('DELETE FROM ACSINV WHERE name = ?', (name,))
+            cursor.execute('DELETE FROM ACSINV WHERE name = %s', (name,))
             users.commit()
             cursor.execute('SELECT * FROM ACSINV ORDER BY DIVISION ASC')
 
             data = cursor.fetchall() 
         return render_template('deleteitem.html', data = data)
     else:
-        with sqlite3.connect('ims.db') as users:
+        with psycopg2.connect(database='ims', user='postgres',
+                           password="LuLu!$4d0gg0!", host="localhost", port="5432") as users:
             cursor = users.cursor()
             cursor.execute('SELECT name, division, stock_lvl FROM ACSINV ORDER BY DIVISION ASC')
 
