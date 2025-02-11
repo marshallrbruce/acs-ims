@@ -42,10 +42,12 @@
                 </li>
         </ul>
         <h1>View Inventories</h1>
+        <div style="overflow-x:auto"></div>
         <table style="width: 100%">
             <tr>
                 <th>Name</th>
                 <th>Division</th>
+                <th>Location</th>
                 <th>Current Stock</th>
                 <th>Mininum Quantity</th>
                 <th>Maximum Quantity</th>
@@ -60,9 +62,12 @@
                 <td>{{invItem[3]}}</td>
                 <td>{{invItem[4]}}</td>
                 <td>{{invItem[5]}}</td>
-                <td>{{invItem[6]}}</td>
+                <td>{{invItem[6]}}</td> 
+                <td>{{invItem[7]}}</td> 
             </tr>
             {%endfor%}
         </table>
+    </div>
+        </body>
     </body>
 </html>
