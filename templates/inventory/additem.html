@@ -49,17 +49,23 @@
             <input type="name" name="name" placeholder="Enter item name" required><br/>
             <label>Enter Division:</label>
             <input type="name" name="division" placeholder="Enter the division the item belongs to" required><br/>
+            <label>Enter Location:</label>
+            <input type="name" name="location" placeholder="Enter the location of the item" required><br/>
             <label>Enter Stock Level:</label>
-            <input type="name" name="stock_lvl" placeholder="Enter item stock level" required><br/>
+            <input type="number" name="stock_lvl" placeholder="Enter item stock level" required><br/>
             <label>Enter Mininum Quantity:</label>
             <input type="number" name="minQty" placeholder="Enter minimum stock level for this item"><br/>
             <label>Enter Maximum Quantity:</label>
             <input type="number" name="maxQty" placeholder="Enter maximum stock level for this item"><br/>
+            <label>Enter Unit Price:</label>
+            <input type="number" step="0.01" name="unit_price" placeholder="Enter the current unit price for this item"><br/>
+            <label>Enter Preferred Vendor:</label>
+            <input type="name" name="pref_vendor" placeholder="Enter the preferred vendor for this item"><br/>
             <label>Contract (Y/N):</label>
             <input type="text" name="contract" placeholder="Is this item on contract? (Y/N)" required><br/>
             <label>Recurring Purchase (Y/N):</label>
             <input type="text" name="recurring" placeholder="Is this item a recurring purchase? (Y/N)" required><br/>
-            <input type="submit" value="submit"/><br/>
+            <input type="submit" value="Submit" class="button button1"/><br/>
         </form>
     </body>
 </html>

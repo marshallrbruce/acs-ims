@@ -13,29 +13,35 @@ connect = sqlite3.connect('ims.db')
 cur = connect.cursor()
 cur.execute(
     'CREATE TABLE IF NOT EXISTS ACSINV (name NAME, \
-        division NAME, stock_lvl INTEGER, minQty INTEGER, maxQty INTEGER, contract TEXT, \
-        recurring TEXT)')
+    division NAME, location NAME, unit_price INTEGER, pref_vendor NAME, \
+    stock_lvl INTEGER, minQty INTEGER, maxQty INTEGER, contract TEXT, \
+    recurring TEXT)')
+cur.execute(
+    'CREATE TABLE IF NOT EXISTS INVCOUNT (name NAME, \
+    division NAME, location NAME, \
+    stock_lvl INTEGER, qty_need INTEGER, user INTEGER, timestamp DATE)')
 
 @app.route('/additem', methods=['GET', 'POST'])
 def additem():
     if request.method == 'POST':
         name = request.form['name']
         division = request.form['division']
+        location = request.form['location']
         stock_lvl = request.form['stock_lvl']
         minQty = request.form['minQty']
         maxQty = request.form['maxQty']
+        unit_price = request.form['unit_price']
+        pref_vendor = request.form['pref_vendor']
         contract = request.form['contract']
         recurring = request.form['recurring']
 
         with sqlite3.connect('ims.db') as users:
             cursor = users.cursor()
-            cursor.execute('CREATE TABLE IF NOT EXISTS ACSINV (name NAME, \
-                            division NAME, stock_lvl INTEGER, minQty INTEGER, maxQty INTEGER, contract TEXT, \
-                            recurring TEXT)')
             cursor.execute('INSERT INTO ACSINV \
-                           (name, division, stock_lvl, minQty, maxQty, contract, recurring) VALUES \
-                           (?, ?, ?, ?, ?, ?, ?)',
-                           (name, division, stock_lvl, minQty, maxQty, contract, recurring))
+                           (name, division, location, unit_price, pref_vendor, stock_lvl, minQty, maxQty, \
+                           contract, recurring) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+                           (name, division, location, unit_price, pref_vendor, stock_lvl, minQty, maxQty,
+                            contract, recurring))
             users.commit()
         return render_template('index.html')
     else:
@@ -54,10 +60,24 @@ def viewinventory():
 def updatestock():
     if request.method == 'POST':
         name = request.form['name']
-        stock_lvl = request.form['updatestock']
+        division = request.form['division']
+        location = request.form['location']
+        stock_lvl = request.form['stock_lvl']
+        minQty = request.form['minQty']
+        maxQty = request.form['maxQty']
+        unit_price = request.form['unit_price']
+        pref_vendor = request.form['pref_vendor']
+        contract = request.form['contract']
+        recurring = request.form['recurring']
+        user = request.form['user']
         with sqlite3.connect('ims.db') as users:
             cursor = users.cursor()
-            cursor.execute("UPDATE acsinv SET stock_lvl = ? WHERE name = ?", (stock_lvl, name,))
+            cursor.execute("UPDATE acsinv SET \
+                           division = ?, location = ?, stock_lvl = ?, minQty = ?, \
+                           maxQty = ?, unit_price = ?, pref_vendor = ?, contract = ?, \
+                           recurring = ?, user = ? WHERE name = ?", 
+                            (division, location, stock_lvl, minQty, maxQty, unit_price,
+                             pref_vendor, contract, recurring, user, name))
 
             users.commit()
             cursor.execute('SELECT * FROM ACSINV ORDER BY DIVISION ASC')
@@ -68,7 +88,9 @@ def updatestock():
     else:
         with sqlite3.connect('ims.db') as users:
             cursor = users.cursor()
-            cursor.execute('SELECT name, division, stock_lvl FROM ACSINV ORDER BY DIVISION ASC')
+            cursor.execute('SELECT name, division, location, stock_lvl, minQty, \
+                           maxQty, unit_price, pref_vendor, contract, recurring \
+                           FROM ACSINV ORDER BY DIVISION ASC')
 
             data = cursor.fetchall() 
         return render_template('inventory/updatestock.html', data=data)
