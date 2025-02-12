@@ -41,33 +41,21 @@
                     </div>
                 </li>
         </ul>
-        <h1>View Inventories</h1>
+        <h1>Items To Be Ordered</h1>
         <div style="overflow-x:auto"></div>
         <table style="width: 100%">
             <tr>
                 <th>Name</th>
                 <th>Division</th>
                 <th>Location</th>
-                <th>Unit Price</th>
-                <th>Preferred Vendor</th>
-                <th>Current Stock</th>
-                <th>Mininum Quantity</th>
-                <th>Maximum Quantity</th>
-                <th>Contract (Y/N)</th>
-                <th>Recurring Purchase (Y/N)</th>
+                <th>Quantity Needed</th>
             </tr>
             {%for invItem in data%}
             <tr>
                 <td>{{invItem[0]}}</td>
                 <td>{{invItem[1]}}</td>
                 <td>{{invItem[2]}}</td>
-                <td>{{invItem[3]}}</td>
-                <td>{{invItem[4]}}</td>
                 <td>{{invItem[5]}}</td>
-                <td>{{invItem[6]}}</td> 
-                <td>{{invItem[7]}}</td> 
-                <td>{{invItem[8]}}</td> 
-                <td>{{invItem[9]}}</td> 
             </tr>
             {%endfor%}
         </table>
