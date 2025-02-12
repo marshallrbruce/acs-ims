@@ -15,11 +15,7 @@ cur.execute(
     'CREATE TABLE IF NOT EXISTS ACSINV (name NAME, \
     division NAME, location NAME, unit_price INTEGER, pref_vendor NAME, \
     stock_lvl INTEGER, minQty INTEGER, maxQty INTEGER, contract TEXT, \
-    recurring TEXT)')
-cur.execute(
-    'CREATE TABLE IF NOT EXISTS INVCOUNT (name NAME, \
-    division NAME, location NAME, \
-    stock_lvl INTEGER, qty_need INTEGER, user INTEGER, timestamp DATE)')
+    recurring TEXT, qty_need INTEGER, user INTEGER, timestamp DATE)')
 
 @app.route('/additem', methods=['GET', 'POST'])
 def additem():
@@ -40,7 +36,7 @@ def additem():
             cursor.execute('INSERT INTO ACSINV \
                            (name, division, location, unit_price, pref_vendor, stock_lvl, minQty, maxQty, \
                            contract, recurring) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-                           (name, division, location, unit_price, pref_vendor, stock_lvl, minQty, maxQty,
+                           (name, division, location, unit_price, pref_vendor, stock_lvl, minQty, maxQty, 
                             contract, recurring))
             users.commit()
         return render_template('index.html')
@@ -55,6 +51,18 @@ def viewinventory():
             cursor.execute('SELECT * FROM ACSINV ORDER BY DIVISION ASC')
             data = cursor.fetchall()
         return render_template('inventory/viewinventory.html', data = data)
+    
+@app.route('/needtoorder', methods=['GET'])
+def needtoorder():
+    if request.method == 'GET':
+        with sqlite3.connect('ims.db') as users:
+            cursor = users.cursor()
+            cursor.execute('SELECT name, division, location, minQty, stock_lvl, \
+                           (minQty - stock_lvl) AS qty_need \
+                           FROM acsinv \
+                           WHERE (minQty - stock_lvl) > 0')
+            data = cursor.fetchall()
+        return render_template('orders/needtoorder.html', data = data)
 
 @app.route('/updatestock', methods=['GET', 'POST'])
 def updatestock():
