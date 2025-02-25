@@ -10,6 +10,7 @@
             <div class="dropdown-content">
                 <a href="home">Home</a>
                 <a href="viewinventory">View Inventory</a>
+                <a href="invcounts">Inventory Count</a>
                 <a href="additem">Add Item</a>
                 <a href="updateitem">Update Item</a>
                 <a href="addlocation">Add Location</a>
@@ -56,10 +57,10 @@
                 <th>Mininum Quantity</th>
                 <th>Maximum Quantity</th>
                 <th>Contract (Y/N)</th>
+                <th>Recurring (Y/N)</th>
             </tr>
-            <tr>
-            {% block content %}
             {%for inv_item, loc in data%}
+            <tr>
                 <td>{{inv_item[1]}}</td>
                 <td>{{inv_item[2]}}</td>
                 <td>{{loc[1]}}</td>
@@ -69,10 +70,10 @@
                 <td>NULL</td>
                 <td>{{inv_item[5]}}</td>
                 <td>{{inv_item[6]}}</td> 
+                <td>{{inv_item[7]}}</td>
                 <td>{{inv_item[7]}}</td> 
-            {%endfor%}
-            {% endblock %}
             </tr>
+            {%endfor%}
         </table>
     </div>
         </body>

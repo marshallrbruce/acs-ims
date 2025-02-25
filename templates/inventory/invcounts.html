@@ -43,7 +43,34 @@
                     </div>
                 </li>
         </ul>
-        <h1>Update and Monitor Inventories</h1>
-
+        <h1>Conduct an Inventory Count</h1>
+        <table style="width: 100%">
+            <tr>
+                <th>Item ID</th>
+                <th>Item Name</th>
+                <th>Item Description</th>
+                <th>Location ID</th>
+                <th>Stock Level</th>
+            </tr>
+            {%for item in count_data%}
+            <tr>
+                <td>{{item[0]}}</td>
+                <td>{{item[1]}}</td>
+                <td>{{item[2]}}</td>
+                <td>{{item[3]}}</td>
+                <td>{{item[4]}}</td>
+            </tr>
+            {%endfor%}
+        </table>
+        
+        <form method="POST">
+            <label>Enter Item ID:</label>
+            <input type="number" name="item_id" placeholder="Enter the item ID" required><br/>
+            <label>Enter Current Stock:</label>
+            <input type="number" name="stock_lvl" placeholder="Enter the current stock stock for this item" required><br/>
+            <label>SAP #:</label>
+            <input type="number" name="user" placeholder="Enter your SAP #" required><br/>
+            <input type="submit" value="Submit" class="button button1"/><br/>
+            </form>
     </body>
 </html>

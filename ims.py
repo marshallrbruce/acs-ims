@@ -82,6 +82,36 @@ def viewinventory():
             loc_data = cursor.fetchall()
         return render_template('inventory/viewinventory.html', data = zip(inv_data, loc_data))
     
+@app.route('/invcounts', methods=['GET', 'POST'])
+def invcounts():
+    if request.method == 'POST':
+        item_id = request.form['item_id']
+        item_name = request.form['item_name']
+        location_id = request.form['location_id']
+        stock_lvl = request.form['stock_lvl']
+        user = request.form['user']
+        with sqlite3.connect('ims.db') as users:
+            cursor = users.cursor()
+            cursor.execute('INSERT INTO inv_counts  \
+                           (item_id, item_name, location_id, stock_lvl, \
+                           user) \
+                           VALUES (?, ?, ?, ?, ?)', 
+                           (item_id, item_name, location_id, stock_lvl, user))
+            users.commit()
+            cursor.execute('SELECT inv.item_id, inv.item_name, inv.item_descr, inv.location_id, inv_counts.stock_lvl \
+                            FROM inv JOIN inv_counts \
+                            ON inv.item_id = inv_counts.item_id')
+            count_data = cursor.fetchall()    
+        return render_template('inventory/invcounts.html', count_data=count_data)
+    else:
+        with sqlite3.connect('ims.db') as users:
+            cursor = users.cursor()
+            cursor.execute('SELECT inv.item_id, inv.item_name, inv.item_descr, inv.location_id, inv_counts.stock_lvl \
+                            FROM inv JOIN inv_counts \
+                            ON inv.item_id = inv_counts.item_id')
+            count_data = cursor.fetchall() 
+        return render_template('inventory/invcounts.html', count_data=count_data)
+    
 @app.route('/needtoorder', methods=['GET'])
 def needtoorder():
     if request.method == 'GET':
