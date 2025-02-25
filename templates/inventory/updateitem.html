@@ -10,8 +10,9 @@
             <div class="dropdown-content">
                 <a href="home">Home</a>
                 <a href="viewinventory">View Inventory</a>
-                <a href="updatestock">Update Stock</a>
                 <a href="additem">Add Item</a>
+                <a href="updateitem">Update Item</a>
+                <a href="addlocation">Add Location</a>
                 <a href="deleteitem">Delete Item</a>
             </div>
             </li>
@@ -41,61 +42,53 @@
                     </div>
                 </li>
         </ul>
-        <h1>Update Stock Levels</h1>
+        <h1>Update Item Details</h1>
         <table style="width: 100%">
             <tr>
-                <th>Name</th>
+                <th>Item ID</th>
+                <th>Item Name</th>
+                <th>Item Description</th>
+                <th>Location ID</th>
                 <th>Division</th>
-                <th>Location</th>
-                <th>Current Stock</th>
                 <th>Mininum Quantity</th>
                 <th>Maximum Quantity</th>
-                <th>Unit Price</th>
-                <th>Preferred Vendor</th>
                 <th>Contract (Y/N)</th>
                 <th>Recurring Purchase (Y/N)</th>
-                <th>User</th>
             </tr>
-            {%for invItem in data%}
+            {%for item in upd_data%}
             <tr>
-                <td>{{invItem[0]}}</td>
-                <td>{{invItem[1]}}</td>
-                <td>{{invItem[2]}}</td>
-                <td>{{invItem[3]}}</td>
-                <td>{{invItem[4]}}</td>
-                <td>{{invItem[5]}}</td>
-                <td>{{invItem[6]}}</td> 
-                <td>{{invItem[7]}}</td> 
-                <td>{{invItem[8]}}</td> 
-                <td>{{invItem[9]}}</td> 
-                <td>{{invItem[10]}}</td> 
+                <td>{{item[0]}}</td>
+                <td>{{item[1]}}</td>
+                <td>{{item[2]}}</td>
+                <td>{{item[3]}}</td>
+                <td>{{item[4]}}</td>
+                <td>{{item[5]}}</td>
+                <td>{{item[6]}}</td> 
+                <td>{{item[7]}}</td> 
+                <td>{{item[8]}}</td> 
             </tr>
             {%endfor%}
         </table>
         
         <form method="POST">
+            <label>Enter Item ID:</label>
+            <input type="number" name="item_id" placeholder="Enter the item ID" required><br/>
             <label>Enter Item Name:</label>
-            <input type="name" name="name" placeholder="Enter item name" required><br/>
+            <input type="name" name="item_name" placeholder="Enter item name" required><br/>
+            <label>Enter Item Description:</label>
+            <input type="text" name="item_descr" placeholder="Enter item description" required><br/>
+            <label>Enter Item Location:</label>
+            <input type="name" name="location_id" placeholder="Enter the location of the item" required><br/>
             <label>Enter Division:</label>
-            <input type="name" name="division" placeholder="Enter the division the item belongs to"><br/>
-            <label>Enter Location:</label>
-            <input type="name" name="location" placeholder="Enter the location of the item"><br/>
-            <label>Enter Stock Level:</label>
-            <input type="number" name="stock_lvl" placeholder="Enter item stock level"><br/>
+            <input type="name" name="division" placeholder="Enter the division the item belongs to" required><br/>
             <label>Enter Mininum Quantity:</label>
-            <input type="number" name="minQty" placeholder="Enter minimum stock level for this item"><br/>
+            <input type="number" name="min_qty" placeholder="Enter minimum stock level for this item"><br/>
             <label>Enter Maximum Quantity:</label>
-            <input type="number" name="maxQty" placeholder="Enter maximum stock level for this item"><br/>
-            <label>Enter Unit Price:</label>
-            <input type="number" step="0.01" name="unit_price" placeholder="Enter the current unit price for this item"><br/>
-            <label>Enter Preferred Vendor:</label>
-            <input type="name" name="pref_vendor" placeholder="Enter the preferred vendor for this item"><br/>
+            <input type="number" name="max_qty" placeholder="Enter maximum stock level for this item"><br/>
             <label>Contract (Y/N):</label>
-            <input type="text" name="contract" placeholder="Is this item on contract? (Y/N)"><br/>
+            <input type="text" name="contract" placeholder="Is this item on contract? (Y/N)" required><br/>
             <label>Recurring Purchase (Y/N):</label>
-            <input type="text" name="recurring" placeholder="Is this item a recurring purchase? (Y/N)"><br/>
-            <label>SAP #:</label>
-            <input type="number" name="user" placeholder="Enter your SAP #" required><br/>
+            <input type="text" name="recurring" placeholder="Is this item a recurring purchase? (Y/N)" required><br/>
             <input type="submit" value="Submit" class="button button1"/><br/>
             </form>
     </body>

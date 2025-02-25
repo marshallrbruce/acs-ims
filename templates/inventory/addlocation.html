@@ -44,24 +44,16 @@
                     </div>
                 </li>
         </ul>
-        <h1>Add an Item</h1>
+        <h1>Add a Location</h1>
         <form method="POST">
-            <label>Enter Item Name:</label>
-            <input type="name" name="item_name" placeholder="Enter item name" required><br/>
-            <label>Enter Item Description:</label>
-            <input type="text" name="item_descr" placeholder="Enter item description" required><br/>
-            <label>Enter Item Location:</label>
-            <input type="name" name="location_id" placeholder="Enter the location of the item" required><br/>
+            <label>Enter Facility:</label>
+            <input type="name" name="facility" placeholder="Enter facility" required><br/>
+            <label>Enter Primary Location:</label>
+            <input type="text" name="primary_loc" placeholder="Enter primary location" required><br/>
+            <label>Enter Secondary Location:</label>
+            <input type="name" name="secondary_loc" placeholder="Enter secondary location" required><br/>
             <label>Enter Division:</label>
-            <input type="name" name="division" placeholder="Enter the division the item belongs to" required><br/>
-            <label>Enter Mininum Quantity:</label>
-            <input type="number" name="min_qty" placeholder="Enter minimum stock level for this item"><br/>
-            <label>Enter Maximum Quantity:</label>
-            <input type="number" name="max_qty" placeholder="Enter maximum stock level for this item"><br/>
-            <label>Contract (Y/N):</label>
-            <input type="text" name="contract" placeholder="Is this item on contract? (Y/N)" required><br/>
-            <label>Recurring Purchase (Y/N):</label>
-            <input type="text" name="recurring" placeholder="Is this item a recurring purchase? (Y/N)" required><br/>
+            <input type="name" name="division" placeholder="Enter the division" required><br/>
             <input type="submit" value="Submit" class="button button1"/><br/>
         </form>
     </body>

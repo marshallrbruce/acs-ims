@@ -10,8 +10,9 @@
             <div class="dropdown-content">
                 <a href="home">Home</a>
                 <a href="viewinventory">View Inventory</a>
-                <a href="updatestock">Update Stock</a>
                 <a href="additem">Add Item</a>
+                <a href="updateitem">Update Item</a>
+                <a href="addlocation">Add Location</a>
                 <a href="deleteitem">Delete Item</a>
             </div>
             </li>
@@ -46,30 +47,32 @@
         <table style="width: 100%">
             <tr>
                 <th>Name</th>
+                <th>Description</th>
+                <th>Facility</th>
+                <th>Primary Location</th>
+                <th>Secondary Location</th>
                 <th>Division</th>
-                <th>Location</th>
-                <th>Unit Price</th>
-                <th>Preferred Vendor</th>
                 <th>Current Stock</th>
                 <th>Mininum Quantity</th>
                 <th>Maximum Quantity</th>
                 <th>Contract (Y/N)</th>
-                <th>Recurring Purchase (Y/N)</th>
             </tr>
-            {%for invItem in data%}
             <tr>
-                <td>{{invItem[0]}}</td>
-                <td>{{invItem[1]}}</td>
-                <td>{{invItem[2]}}</td>
-                <td>{{invItem[3]}}</td>
-                <td>{{invItem[4]}}</td>
-                <td>{{invItem[5]}}</td>
-                <td>{{invItem[6]}}</td> 
-                <td>{{invItem[7]}}</td> 
-                <td>{{invItem[8]}}</td> 
-                <td>{{invItem[9]}}</td> 
-            </tr>
+            {% block content %}
+            {%for inv_item, loc in data%}
+                <td>{{inv_item[1]}}</td>
+                <td>{{inv_item[2]}}</td>
+                <td>{{loc[1]}}</td>
+                <td>{{loc[2]}}</td>
+                <td>{{loc[3]}}</td>
+                <td>{{inv_item[4]}}</td>
+                <td>NULL</td>
+                <td>{{inv_item[5]}}</td>
+                <td>{{inv_item[6]}}</td> 
+                <td>{{inv_item[7]}}</td> 
             {%endfor%}
+            {% endblock %}
+            </tr>
         </table>
     </div>
         </body>
