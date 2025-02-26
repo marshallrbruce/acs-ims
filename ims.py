@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request
 import sqlite3
+from datetime import datetime
 
 app = Flask(__name__)
 
@@ -15,7 +16,7 @@ cursor.execute("PRAGMA foreign_keys = ON")
 cursor.execute(
     'CREATE TABLE IF NOT EXISTS inv (item_id INTEGER PRIMARY KEY AUTOINCREMENT, \
     item_name VARCHAR(50), item_descr VARCHAR(255), location_id VARCHAR(20), division VARCHAR(20), \
-    min_qty NUMBER, max_qty NUMBER, contract VARCHAR(1), recurring VARCHAR(1))')
+    stock_lvl NUMBER, min_qty NUMBER, max_qty NUMBER, contract VARCHAR(1), recurring VARCHAR(1))')
 cursor.execute(
     'CREATE TABLE IF NOT EXISTS inv_counts (count_id INTEGER PRIMARY KEY AUTOINCREMENT, \
     timestamp DATE, user NUMBER, item_id INTEGER,  \
@@ -33,6 +34,7 @@ def additem():
         item_descr = request.form['item_descr']
         location_id = request.form['location_id']
         division = request.form['division']
+        stock_lvl = request.form['stock_lvl']
         min_qty = request.form['min_qty']
         max_qty = request.form['max_qty']
         contract = request.form['contract']
@@ -41,9 +43,9 @@ def additem():
         with sqlite3.connect('ims.db') as users:
             cursor = users.cursor()
             cursor.execute('INSERT INTO inv \
-                           (item_name, item_descr, location_id, division, min_qty, max_qty, contract, recurring) \
-                           VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
-                           (item_name, item_descr, location_id, division, min_qty, max_qty, contract, recurring))
+                           (item_name, item_descr, location_id, division, stock_lvl, min_qty, max_qty, contract, recurring) \
+                           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+                           (item_name, item_descr, location_id, division, stock_lvl, min_qty, max_qty, contract, recurring))
             users.commit()
         return render_template('index.html')
     else:
@@ -77,8 +79,7 @@ def viewinventory():
             inv_data = cursor.fetchall()
             cursor.execute('SELECT locations.location_id, locations.facility, locations.primary_loc, locations.secondary_loc, inv.location_id \
                            FROM locations JOIN inv \
-                           ON locations.location_id = inv.location_id \
-                           ')
+                           ON locations.location_id = inv.location_id')
             loc_data = cursor.fetchall()
         return render_template('inventory/viewinventory.html', data = zip(inv_data, loc_data))
     
@@ -86,29 +87,35 @@ def viewinventory():
 def invcounts():
     if request.method == 'POST':
         item_id = request.form['item_id']
-        item_name = request.form['item_name']
-        location_id = request.form['location_id']
         stock_lvl = request.form['stock_lvl']
         user = request.form['user']
+        now = datetime.now()
+        timestamp = now.strftime("%Y-%M-%d %H:%M:%S")
         with sqlite3.connect('ims.db') as users:
             cursor = users.cursor()
             cursor.execute('INSERT INTO inv_counts  \
-                           (item_id, item_name, location_id, stock_lvl, \
-                           user) \
-                           VALUES (?, ?, ?, ?, ?)', 
-                           (item_id, item_name, location_id, stock_lvl, user))
+                           (item_id, stock_lvl, user, timestamp) \
+                           VALUES (?, ?, ?, ?)', 
+                           (item_id, stock_lvl, user, timestamp))
             users.commit()
-            cursor.execute('SELECT inv.item_id, inv.item_name, inv.item_descr, inv.location_id, inv_counts.stock_lvl \
+            cursor.execute('UPDATE inv SET \
+                           stock_lvl = ? \
+                           WHERE item_id = ?',
+                           (stock_lvl, item_id))
+            users.commit()
+            cursor.execute('SELECT inv.item_id, inv.item_name, inv.item_descr, inv.location_id, inv_counts.stock_lvl, inv_counts.timestamp, inv_counts.user \
                             FROM inv JOIN inv_counts \
-                            ON inv.item_id = inv_counts.item_id')
+                            ON inv.item_id = inv_counts.item_id \
+                            ORDER BY inv_counts.timestamp DESC')
             count_data = cursor.fetchall()    
         return render_template('inventory/invcounts.html', count_data=count_data)
     else:
         with sqlite3.connect('ims.db') as users:
             cursor = users.cursor()
-            cursor.execute('SELECT inv.item_id, inv.item_name, inv.item_descr, inv.location_id, inv_counts.stock_lvl \
+            cursor.execute('SELECT inv.item_id, inv.item_name, inv.item_descr, inv.location_id, inv_counts.stock_lvl, inv_counts.timestamp, inv_counts.user \
                             FROM inv JOIN inv_counts \
-                            ON inv.item_id = inv_counts.item_id')
+                            ON inv.item_id = inv_counts.item_id \
+                            ORDER BY inv_counts.timestamp DESC')
             count_data = cursor.fetchall() 
         return render_template('inventory/invcounts.html', count_data=count_data)
     

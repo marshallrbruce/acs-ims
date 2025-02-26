@@ -47,6 +47,7 @@
         <div style="overflow-x:auto"></div>
         <table style="width: 100%">
             <tr>
+                <th>Item ID</th>
                 <th>Name</th>
                 <th>Description</th>
                 <th>Facility</th>
@@ -61,17 +62,18 @@
             </tr>
             {%for inv_item, loc in data%}
             <tr>
+                <td>{{inv_item[0]}}</td>
                 <td>{{inv_item[1]}}</td>
                 <td>{{inv_item[2]}}</td>
                 <td>{{loc[1]}}</td>
                 <td>{{loc[2]}}</td>
                 <td>{{loc[3]}}</td>
                 <td>{{inv_item[4]}}</td>
-                <td>NULL</td>
                 <td>{{inv_item[5]}}</td>
-                <td>{{inv_item[6]}}</td> 
-                <td>{{inv_item[7]}}</td>
+                <td>{{inv_item[6]}}</td>
                 <td>{{inv_item[7]}}</td> 
+                <td>{{inv_item[8]}}</td>
+                <td>{{inv_item[9]}}</td> 
             </tr>
             {%endfor%}
         </table>
