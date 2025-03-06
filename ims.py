@@ -11,6 +11,7 @@ def index():
 
 connect = sqlite3.connect('ims.db')
 
+# Connect to ims database and create tables
 cursor = connect.cursor()
 cursor.execute("PRAGMA foreign_keys = ON")
 cursor.execute(
@@ -20,17 +21,16 @@ cursor.execute(
 cursor.execute(
     'CREATE TABLE IF NOT EXISTS inv_counts (count_id INTEGER PRIMARY KEY AUTOINCREMENT, \
     timestamp DATE, user NUMBER, item_id INTEGER,  \
-    stock_lvl NUMBER)'
-)
+    stock_lvl NUMBER)')
 cursor.execute(
     'CREATE TABLE IF NOT EXISTS locations (location_id INTEGER PRIMARY KEY AUTOINCREMENT, \
-    facility VARCHAR(14), primary_loc VARCHAR(25), secondary_loc VARCHAR(10), division VARCHAR(20))'
-)
+    facility VARCHAR(14), primary_loc VARCHAR(25), secondary_loc VARCHAR(10), division VARCHAR(20))')
 
+# Add a new, non-existing item to the inv table
 @app.route('/additem', methods=['GET', 'POST'])
 def additem():
-    if request.method == 'POST':
-        item_name = request.form['item_name']
+    if request.method == 'POST': # Create value variables from additem.html
+        item_name = request.form['item_name'] 
         item_descr = request.form['item_descr']
         location_id = request.form['location_id']
         division = request.form['division']
@@ -40,6 +40,7 @@ def additem():
         contract = request.form['contract']
         recurring = request.form['recurring']
 
+        # Insert user provided values into inv table
         with sqlite3.connect('ims.db') as users:
             cursor = users.cursor()
             cursor.execute('INSERT INTO inv \
@@ -47,18 +48,20 @@ def additem():
                            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
                            (item_name, item_descr, location_id, division, stock_lvl, min_qty, max_qty, contract, recurring))
             users.commit()
-        return render_template('index.html')
+        return render_template('inventory/additem.html')
     else:
         return render_template('inventory/additem.html')
-    
+
+# Add a new, non-existing location to the locations table
 @app.route('/addlocation', methods=['GET', 'POST'])
 def addlocation():
-    if request.method == 'POST':
+    if request.method == 'POST': # Create value variables from addlocation.html
         facility = request.form['facility']
         primary_loc = request.form['primary_loc']
         secondary_loc = request.form['secondary_loc']
         division = request.form['division']
 
+        # Insert user provided values into locations table
         with sqlite3.connect('ims.db') as users:
             cursor = users.cursor()
             cursor.execute('INSERT INTO locations \
@@ -66,10 +69,10 @@ def addlocation():
                            VALUES (?, ?, ?, ?)',
                            (facility, primary_loc, secondary_loc, division))
             users.commit()
-        return render_template('index.html')
+        return render_template('inventory/addlocation.html')
     else:
         return render_template('inventory/addlocation.html')
-    
+
 @app.route('/viewinventory', methods=['GET'])
 def viewinventory():
     if request.method == 'GET':
@@ -124,12 +127,13 @@ def needtoorder():
     if request.method == 'GET':
         with sqlite3.connect('ims.db') as users:
             cursor = users.cursor()
-            cursor.execute('SELECT name, division, location, minQty, stock_lvl, \
-                           (minQty - stock_lvl) AS qty_need \
-                           FROM acsinv \
-                           WHERE (minQty - stock_lvl) > 0')
-            data = cursor.fetchall()
-        return render_template('orders/needtoorder.html', data = data)
+            cursor.execute('SELECT inv.location_id, inv.item_name, inv.division, inv.stock_lvl, (inv.min_qty - inv.stock_lvl) AS qty_need, \
+                           locations.facility, locations.primary_loc, locations.secondary_loc  \
+                           FROM inv JOIN locations \
+                           ON inv.location_id = locations.location_id \
+                           WHERE qty_need > 0')
+            order_data = cursor.fetchall()
+        return render_template('orders/needtoorder.html', order_data = order_data)
 
 @app.route('/updateitem', methods=['GET', 'POST'])
 def updateitem():
